@@ -1,7 +1,9 @@
 FROM python:3.6-alpine
 
-ADD . /app
-WORKDIR /app
+COPY . /youtube
+COPY ./youtube/static /static
+COPY ./youtube/media /media
+WORKDIR /youtube
 COPY requirements.txt ./
 
 ENV DJANGO_SECRET_KEY 8b4n@!9k8*23x-!@%=7v!l)_4$&8u9+1@(+c0rav%2amph&bn3
