@@ -1,1 +1,1 @@
-web: bin/start-nginx gunicorn youtube.wsgi:application
+web: bin/start-nginx gunicorn -c gunicorn.conf youtube.wsgi:application
