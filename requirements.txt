@@ -1,5 +1,0 @@
-Django==2.1.11
-gunicorn==19.9.0
-ffmpeg-python
-sox
-youtube-dl
