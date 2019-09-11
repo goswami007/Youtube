@@ -1,1 +1,1 @@
-web: bin/start-nginx exec gunicorn -c gunicorn.conf youtube.wsgi
+web: python manage.py collectstatic --noinput; bin/start-nginx exec gunicorn -c gunicorn.conf youtube.wsgi
