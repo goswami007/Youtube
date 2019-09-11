@@ -25,7 +25,7 @@ SECRET_KEY = '8b4n@!9k8*23x-!@%=7v!l)_4$&8u9+1@(+c0rav%2amph&bn3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://youtubewebapp.herokuapp.com']
+ALLOWED_HOSTS = ['https://youtubewebapp.herokuapp.com', 'youtubewebapp.herokuapp.com']
 
 
 DEFAULT_FROM_EMAIL = 'archit.t13@gmail.com'
@@ -123,10 +123,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_ROOT = '/static/'  #os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')  #'static/'
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = '/media/'  #os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  #'media/'
 
 MEDIA_URL = '/media/'
