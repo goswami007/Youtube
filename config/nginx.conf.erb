@@ -34,12 +34,12 @@ http {
                 server_name _;
                 keepalive_timeout 5;
 
-                location media/ {
+                location /media/ {
                         autoindex off;
                         alias /;
                 }
 
-                location static/ {
+                location /static/ {
                         autoindex off;
                         alias /static/;
                 }
