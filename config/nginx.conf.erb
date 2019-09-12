@@ -36,12 +36,12 @@ http {
 
                 location /media/ {
                         autoindex off;
-                        alias media/;
+                        root media/;
                 }
 
                 location /static/ {
                         autoindex off;
-                        alias static/;
+                        root static/;
                 }
 
                 location / {

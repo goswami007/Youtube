@@ -25,7 +25,7 @@ SECRET_KEY = '8b4n@!9k8*23x-!@%=7v!l)_4$&8u9+1@(+c0rav%2amph&bn3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://youtubewebapp.herokuapp.com', 'youtubewebapp.herokuapp.com']
+ALLOWED_HOSTS = ['youtubewebapp.herokuapp.com']
 
 
 DEFAULT_FROM_EMAIL = 'archit.t13@gmail.com'
