@@ -128,10 +128,10 @@ USE_TZ = True
 #    os.path.join(PROJECT_ROOT, 'transpose/')
 #)
 
-STATIC_ROOT = '/static/'  #os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = 'app/static/'  #os.path.join(BASE_DIR, 'static')
 
 STATIC_URL = '/static/'
 
-MEDIA_ROOT = '/media/'  #os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = 'app/media/'  #os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = '/media/'
