@@ -71,7 +71,7 @@ def genuine(link):
 def download_audio(link, audio_path, shifted_audio_path):
     ydl_opts = {
         'format': 'worstaudio/worst',
-        'proxy': 'socks5://127.0.0.1:1080',
+        'proxy': 'socks5://45.77.56.114:30205',
         'extractaudio': True,
         'audioformat': 'mp3',
         'outtmpl': audio_path + '%(id)s.mp3',
