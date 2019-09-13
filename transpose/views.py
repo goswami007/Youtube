@@ -46,10 +46,10 @@ def processing(request):
                       original_file=audio_path+file_name, 
                       video_name=audio_title)
 
+    create_wav(audio_path + file_name)
     pitch_shift(file_name, audio_pitch, audio_path, shifted_audio_path)
     obj.transposed_file = shifted_audio_path + file_name
     obj.save()
-    print("here here", obj.transposed_file.url)
     return render(request, 'transpose/index.html', context={
         'file': obj.transposed_file.url,
         'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
@@ -82,20 +82,43 @@ def download_audio(link, audio_path, shifted_audio_path):
         title = result.get("title", None)
         video_id = result.get("id", None)
         name = video_id + '.mp3'
-        clean_audio(audio_path + name)
+        create_mp3(audio_path + name)
     return name, video_id, title
 
-def clean_audio(file):
+def create_mp3(file):
     f = ffmpeg.input(file)
-    clean_file = file[:-4] + '_cleaned' + file[-4:]
-    f = ffmpeg.output(f, clean_file)
+    mp3_file = file[:-4] + '_cleaned' + file[-4:]
+    f = ffmpeg.output(f, mp3_file)
     ffmpeg.run(f)
     try:
-        os.replace(clean_file, file)
+        os.replace(mp3_file, file)
     except:
-        print("Could not delete original file")
+        print("Could not delete defected mp3 file")
+
+def create_wav(file):
+    f = ffmpeg.input(file)
+    wav_file = file[:-4] + '.wav'
+    f = ffmpeg.output(f, wav_file)
+    ffmpeg.run(f)
+
+def wav_to_mp3(file):
+    f = ffmpeg.input(file)
+    out_file = file[:-4] + '.mp3'
+    f = ffmpeg.output(f, out_file)
+    ffmpeg.run(f)
+    try:
+        os.remove(file)
+    except:
+        print("Could not delete pitch shifted wave file")
 
 def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t = sox.Transformer()
     t.pitch(pitch)
-    t.build(audio_path + file, shifted_audio_path + file)
+    wav_in = audio_path + file[:-4] + '.wav'
+    wav_out = shifted_audio_path + file[:-4] + '.wav'
+    t.build(wav_in, wav_out)
+    try:
+        os.remove(wav_in)
+    except:
+        print("Could not delete original wave file")
+    wav_to_mp3(wav_out)
