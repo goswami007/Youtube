@@ -25,7 +25,9 @@ def processing(request):
 
     if not genuine(youtube_link):
         return render(request, 'transpose/index.html', {
-            'error_message': "Not a valid URL"
+            'error_message': "Not a valid URL",
+            'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
+            'pos_range': [1, 2, 3, 4, 5, 6, 7, 8]
             })
 
     obj = video_exists(youtube_link)
@@ -37,9 +39,11 @@ def processing(request):
             file_name, video_id, audio_title = download_audio(youtube_link, 
                                                               audio_path, 
                                                               shifted_audio_path)
-        except:
+        except Exception as e:
             return render(request, 'transpose/index.html', {
-                'error_message': "There was some problem getting the video."
+                'error_message': "There was some problem getting the video. " + str(e),
+                'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
+                'pos_range': [1, 2, 3, 4, 5, 6, 7, 8]
                 })
         obj = Youtube(video_url=youtube_link, 
                       video_id=video_id,
@@ -88,8 +92,11 @@ def download_audio(link, audio_path, shifted_audio_path):
 def create_mp3(file):
     f = ffmpeg.input(file)
     mp3_file = file[:-4] + '_cleaned' + file[-4:]
-    f = ffmpeg.overwrite_output(f, mp3_file)
+    f = ffmpeg.output(f, mp3_file)
+    f = ffmpeg.overwrite_output(f)
+    print("Good here")
     ffmpeg.run(f)
+    print("And here too")
     try:
         os.replace(mp3_file, file)
     except:
@@ -98,13 +105,15 @@ def create_mp3(file):
 def create_wav(file):
     f = ffmpeg.input(file)
     wav_file = file[:-4] + '.wav'
-    f = ffmpeg.overwrite_output(f, wav_file)
+    f = ffmpeg.output(f, wav_file)
+    f = ffmpeg.overwrite_output(f)
     ffmpeg.run(f)
 
 def wav_to_mp3(file):
     f = ffmpeg.input(file)
     out_file = file[:-4] + '.mp3'
-    f = ffmpeg.overwrite_output(f, out_file)
+    f = ffmpeg.output(f, out_file)
+    f = ffmpeg.overwrite_output(f)
     ffmpeg.run(f)
     try:
         os.remove(file)
