@@ -88,7 +88,7 @@ def download_audio(link, audio_path, shifted_audio_path):
 def create_mp3(file):
     f = ffmpeg.input(file)
     mp3_file = file[:-4] + '_cleaned' + file[-4:]
-    f = ffmpeg.output(f, mp3_file)
+    f = ffmpeg.overwrite_output(f, mp3_file)
     ffmpeg.run(f)
     try:
         os.replace(mp3_file, file)
@@ -98,13 +98,13 @@ def create_mp3(file):
 def create_wav(file):
     f = ffmpeg.input(file)
     wav_file = file[:-4] + '.wav'
-    f = ffmpeg.output(f, wav_file)
+    f = ffmpeg.overwrite_output(f, wav_file)
     ffmpeg.run(f)
 
 def wav_to_mp3(file):
     f = ffmpeg.input(file)
     out_file = file[:-4] + '.mp3'
-    f = ffmpeg.output(f, out_file)
+    f = ffmpeg.overwrite_output(f, out_file)
     ffmpeg.run(f)
     try:
         os.remove(file)
