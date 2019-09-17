@@ -112,13 +112,16 @@ def create_wav(file):
     ffmpeg.run(f)
 
 def wav_to_mp3(file):
+    print("\n\n Enterd wav to mp3")
     f = ffmpeg.input(file)
     out_file = file[:-4] + '.mp3'
     f = ffmpeg.output(f, out_file)
     f = ffmpeg.overwrite_output(f)
+    print("\n\n Before run")
     ffmpeg.run(f)
+    print("\n\n After run")
     try:
-        os.remove(file)
+        os.remove(file, out_file)
     except:
         print("Could not delete pitch shifted wave file")
 
@@ -127,7 +130,9 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t.pitch(pitch)
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
+    print("\n\n Before build in pitch shift")
     t.build(wav_in, wav_out)
+    print("\n\n after build in pitch_shift")
     try:
         os.remove(wav_in)
     except:
