@@ -130,6 +130,8 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t.pitch(pitch)
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
+    print("\n\n", wav_in)
+    print("\n\n", wav_out)
     print("\n\n Before build in pitch shift")
     t.build(wav_in, wav_out)
     print("\n\n after build in pitch_shift")
