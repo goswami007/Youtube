@@ -50,10 +50,14 @@ def processing(request):
                       original_file=audio_path+file_name, 
                       video_name=audio_title)
 
+    print('\n\n before wav')
     create_wav(audio_path + file_name)
+    print('\n\n after wav')
     pitch_shift(file_name, audio_pitch, audio_path, shifted_audio_path)
+    print('\n\n after pitch shift')
     obj.transposed_file = shifted_audio_path + file_name
     obj.save()
+    print('\n\n after saving')
     return render(request, 'transpose/index.html', context={
         'file': obj.transposed_file.url,
         'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
@@ -94,9 +98,7 @@ def create_mp3(file):
     mp3_file = file[:-4] + '_cleaned' + file[-4:]
     f = ffmpeg.output(f, mp3_file)
     f = ffmpeg.overwrite_output(f)
-    print("Good here")
     ffmpeg.run(f)
-    print("And here too")
     try:
         os.replace(mp3_file, file)
     except:
