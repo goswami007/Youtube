@@ -22,6 +22,9 @@ http {
         include mime.types;
         sendfile on;
 
+        # set client body size to 20M #
+        client_max_body_size 20M;
+
         #Must read the body in 5 seconds.
         client_body_timeout 5;
 
