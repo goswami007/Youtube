@@ -32,9 +32,11 @@ def processing(request):
 
     obj = video_exists(youtube_link)
     if obj:
+        print("\n\n Audio already exists")
         file_name = obj.video_id + '.mp3'
         obj.transposed_file.delete()
     else:
+        print("\n\nNew audio")
         try:
             file_name, video_id, audio_title = download_audio(youtube_link, 
                                                               audio_path, 
@@ -94,11 +96,13 @@ def download_audio(link, audio_path, shifted_audio_path):
     return name, video_id, title
 
 def create_mp3(file):
+    print("\n\nIn create mp3")
     f = ffmpeg.input(file)
     mp3_file = file[:-4] + '_cleaned' + file[-4:]
     f = ffmpeg.output(f, mp3_file)
     f = ffmpeg.overwrite_output(f)
     ffmpeg.run(f)
+    print("\n\nIn create mp3 after ffmpeg run")
     try:
         os.replace(mp3_file, file)
     except:
