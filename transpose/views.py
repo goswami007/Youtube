@@ -137,7 +137,11 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     print("\n\n", wav_in)
     print("\n\n", wav_out)
     print("\n\n Before build in pitch shift")
-    t.build(wav_in, wav_out)
+    try:
+        t.build(wav_in, wav_out)
+    except Exception as e:
+        print("\n\n", e, "\n\n")
+        return
     print("\n\n after build in pitch_shift")
     try:
         os.remove(wav_in)
