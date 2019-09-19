@@ -34,9 +34,9 @@ http {
                 server_name _;
                 keepalive_timeout 5;
 
-                location /media/ {
+                location / {
                         autoindex off;
-                        alias /;
+                        alias media/;
                 }
 
                 location /static/ {

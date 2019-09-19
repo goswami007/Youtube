@@ -19,8 +19,8 @@ def index(request):
 def processing(request):
     youtube_link = request.POST.get('youtube_link')
     audio_pitch = float(request.POST.get('pitch'))
-    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio/')
-    shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio/')
+    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio\\')
+    shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio\\')
     error = False
 
     if not genuine(youtube_link):
@@ -121,9 +121,9 @@ def wav_to_mp3(file):
     ffmpeg.run(f)
     print("\n\n After run")
     try:
-        os.remove(file, out_file)
-    except:
-        print("Could not delete pitch shifted wave file")
+        os.replace(file, out_file)
+    except Exception as e:
+        print("Could not delete pitch shifted wave file:", e)
 
 def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t = sox.Transformer()
