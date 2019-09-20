@@ -4,10 +4,9 @@ from django.urls import reverse
 from django.conf import settings
 
 import os
-#import sox
+import sox
 import ffmpeg
 import pathlib
-import librosa
 import youtube_dl
 from .models import Youtube
 
@@ -60,7 +59,7 @@ def processing(request):
     obj.save()
     print('\n\n after saving')
     return render(request, 'transpose/index.html', context={
-        'file': obj.transposed_file.url,
+        'file': obj.original_file.url,
         'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
         'pos_range': [1, 2, 3, 4, 5, 6, 7, 8]
         })
@@ -126,7 +125,7 @@ def wav_to_mp3(file):
     except Exception as e:
         print("Could not delete pitch shifted wave file:", e)
 
-"""def pitch_shift(file, pitch, audio_path, shifted_audio_path):
+def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t = sox.Transformer()
     t.pitch(pitch)
     wav_in = audio_path + file[:-4] + '.wav'
@@ -134,15 +133,19 @@ def wav_to_mp3(file):
     print("\n\n", wav_in)
     print("\n\n", wav_out)
     print("\n\n Before build in pitch shift")
-    t.build(wav_in, wav_out)
+    try:
+        t.build(wav_in, wav_out)
+    except Exception as e:
+        print("\n\n", e, "\n\n")
+        return
     print("\n\n after build in pitch_shift")
     try:
         os.remove(wav_in)
     except:
         print("Could not delete original wave file")
-    wav_to_mp3(wav_out)"""
+    wav_to_mp3(wav_out)
 
-def pitch_shift(file, pitch, audio_path, shifted_audio_path):
+"""def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
     # load the audio
@@ -156,4 +159,4 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
         os.remove(wav_in)
     except:
         print("Could not delete original wave file")
-    wav_to_mp3(wav_out)
+    wav_to_mp3(wav_out)"""
