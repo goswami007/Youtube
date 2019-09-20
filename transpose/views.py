@@ -4,9 +4,10 @@ from django.urls import reverse
 from django.conf import settings
 
 import os
-import sox
+#import sox
 import ffmpeg
 import pathlib
+import librosa
 import youtube_dl
 from .models import Youtube
 
@@ -19,8 +20,8 @@ def index(request):
 def processing(request):
     youtube_link = request.POST.get('youtube_link')
     audio_pitch = float(request.POST.get('pitch'))
-    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio/')
-    shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio/')
+    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio\\')
+    shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio\\')
     error = False
 
     if not genuine(youtube_link):
@@ -32,11 +33,9 @@ def processing(request):
 
     obj = video_exists(youtube_link)
     if obj:
-        print("\n\n Audio already exists")
         file_name = obj.video_id + '.mp3'
         obj.transposed_file.delete()
     else:
-        print("\n\nNew audio")
         try:
             file_name, video_id, audio_title = download_audio(youtube_link, 
                                                               audio_path, 
@@ -81,7 +80,7 @@ def genuine(link):
 def download_audio(link, audio_path, shifted_audio_path):
     ydl_opts = {
         'format': 'worstaudio/worst',
-        'proxy': 'socks5://47.91.88.100:1080',
+        'proxy': 'socks5://178.197.248.213:1080',
         'extractaudio': True,
         'audioformat': 'mp3',
         'outtmpl': audio_path + '%(id)s.mp3',
@@ -96,13 +95,11 @@ def download_audio(link, audio_path, shifted_audio_path):
     return name, video_id, title
 
 def create_mp3(file):
-    print("\n\nIn create mp3")
     f = ffmpeg.input(file)
     mp3_file = file[:-4] + '_cleaned' + file[-4:]
     f = ffmpeg.output(f, mp3_file)
     f = ffmpeg.overwrite_output(f)
     ffmpeg.run(f)
-    print("\n\nIn create mp3 after ffmpeg run")
     try:
         os.replace(mp3_file, file)
     except:
@@ -129,7 +126,7 @@ def wav_to_mp3(file):
     except Exception as e:
         print("Could not delete pitch shifted wave file:", e)
 
-def pitch_shift(file, pitch, audio_path, shifted_audio_path):
+"""def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t = sox.Transformer()
     t.pitch(pitch)
     wav_in = audio_path + file[:-4] + '.wav'
@@ -137,12 +134,24 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     print("\n\n", wav_in)
     print("\n\n", wav_out)
     print("\n\n Before build in pitch shift")
-    try:
-        t.build(wav_in, wav_out)
-    except Exception as e:
-        print("\n\n", e, "\n\n")
-        return
+    t.build(wav_in, wav_out)
     print("\n\n after build in pitch_shift")
+    try:
+        os.remove(wav_in)
+    except:
+        print("Could not delete original wave file")
+    wav_to_mp3(wav_out)"""
+
+def pitch_shift(file, pitch, audio_path, shifted_audio_path):
+    wav_in = audio_path + file[:-4] + '.wav'
+    wav_out = shifted_audio_path + file[:-4] + '.wav'
+    # load the audio
+    print("\n\nLoading audio")
+    y, sr = librosa.load(wav_in, mono=True, sr=None)
+    print("\n\nshifting pitch of audio")
+    y_shifted = librosa.effects.pitch_shift(y, sr, n_steps=pitch)
+    print("\n\nwriting audio")
+    librosa.output.write_wav(wav_out, y_shifted, sr)
     try:
         os.remove(wav_in)
     except:
