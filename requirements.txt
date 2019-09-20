@@ -4,3 +4,4 @@ ffmpeg-python
 #sox
 youtube-dl
 librosa
+soundfile
