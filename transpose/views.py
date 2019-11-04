@@ -165,6 +165,8 @@ def download_audio(link, audio_path, shifted_audio_path):
                 create_mp3(audio_path + name)
         except Exception:
             print(yt_proxy, "is not working")
+            p.delete_proxy()
+            yt_proxy = p.get_proxy()
         else:
             break
 
