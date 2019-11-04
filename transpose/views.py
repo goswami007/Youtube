@@ -29,7 +29,7 @@ class Proxy:
         self.order_proxy()
     def make_soup(self):
         request = urllib.request.Request(self.link, headers=Proxy.headers)
-        response = urllib.request.urlopen(request, timeout=10)
+        response = urllib.request.urlopen(request, timeout=50)
         response_data = response.read().decode("utf-8")
         soup = BeautifulSoup(response_data, 'html.parser')
         return soup
