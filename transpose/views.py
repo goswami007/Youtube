@@ -87,8 +87,10 @@ def index(request):
 def processing(request):
     youtube_link = request.POST.get('youtube_link')
     audio_pitch = float(request.POST.get('pitch'))
-    audio_path = os.path.join(settings.MEDIA_ROOT, 'audio\\')
-    shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio\\')
+    #audio_path = os.path.join(settings.MEDIA_ROOT, 'audio\\')
+    #shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio\\')
+    audio_path = 'audio/'
+    shifted_audio_path = 'shifted_audio/'
     #error = False
 
     if not genuine(youtube_link):
