@@ -8,6 +8,7 @@ import sox
 import ffmpeg
 import pathlib
 import youtube_dl
+from proxy import Proxy
 from .models import Youtube
 
 def index(request):
@@ -21,7 +22,7 @@ def processing(request):
     audio_pitch = float(request.POST.get('pitch'))
     audio_path = os.path.join(settings.MEDIA_ROOT, 'audio\\')
     shifted_audio_path = os.path.join(settings.MEDIA_ROOT, 'shifted_audio\\')
-    error = False
+    #error = False
 
     if not genuine(youtube_link):
         return render(request, 'transpose/index.html', {
@@ -77,20 +78,29 @@ def genuine(link):
     return True
 
 def download_audio(link, audio_path, shifted_audio_path):
-    ydl_opts = {
-        'format': 'worstaudio/worst',
-        'proxy': 'socks5://178.197.248.213:1080',
-        'extractaudio': True,
-        'audioformat': 'mp3',
-        'outtmpl': audio_path + '%(id)s.mp3',
-        'noplaylist': True
-    }
-    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-        result = ydl.extract_info(link)
-        title = result.get("title", None)
-        video_id = result.get("id", None)
-        name = video_id + '.mp3'
-        create_mp3(audio_path + name)
+    p = Proxy('http://www.gatherproxy.com/sockslist')
+    yt_proxy = p.get_proxy()
+    while yt_proxy != None:
+        ydl_opts = {
+            'format': 'worstaudio/worst',
+            'proxy': 'socks5://' + yt_proxy,
+            'extractaudio': True,
+            'audioformat': 'mp3',
+            'outtmpl': audio_path + '%(id)s.mp3',
+            'noplaylist': True
+        }
+        try:
+            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                result = ydl.extract_info(link)
+                title = result.get("title", None)
+                video_id = result.get("id", None)
+                name = video_id + '.mp3'
+                create_mp3(audio_path + name)
+        except Exception:
+            print(yt_proxy, "is not working")
+        else:
+            break
+
     return name, video_id, title
 
 def create_mp3(file):
