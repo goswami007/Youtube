@@ -175,7 +175,7 @@ def download_audio(link, audio_path, shifted_audio_path):
             yt_proxy = p.get_proxy()
         else:
             break
-
+    print("Out of yt_download")
     return name, video_id, title
 
 def create_mp3(file):
