@@ -133,7 +133,7 @@ def processing(request):
     obj.save()
     print('\n\n after saving')
     return render(request, 'transpose/index.html', context={
-        'file': obj.transposed_file.url,
+        'file': obj.original_file.url,
         'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
         'pos_range': [1, 2, 3, 4, 5, 6, 7, 8]
         })
@@ -233,13 +233,13 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
 
 def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
     wav_in = audio_path + file[:-4] + '.wav'
-    wav_out = shifted_audio_path + file[:-4] + '.wav'
+    wav_out = audio_path + file[:-4] + '_s' + '.wav'
     try:
         subprocess.call(["rubberband", "-p", str(pitch), wav_in, wav_out])
     except Exception as e:
         print('\n\n', e)
     try:
-        os.remove(wav_in)
+        os.replace(wav_out, wav_in)
     except:
         print("Could not delete original wave file")
     wav_to_mp3(wav_out)
