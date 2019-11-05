@@ -7,6 +7,7 @@ import os
 #import sox
 import ffmpeg
 import pathlib
+import subprocess
 import youtube_dl
 from .models import Youtube
 from scipy.io import wavfile
@@ -233,9 +234,7 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
 def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
-    y, sr = wavfile.read(wav_in)
-    y_shifted = pitch_shift(y, sr, n_steps=pitch)
-    wavfile.write(filename=wav_out ,rate=sr, data=y_shifted)
+    subprocess.call(["rubberband", "-p", pitch, wav_in, wav_out])
     try:
         os.remove(wav_in)
     except:
