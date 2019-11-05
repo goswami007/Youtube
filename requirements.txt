@@ -6,3 +6,5 @@ youtube-dl
 beautifulsoup4
 pyrubberband
 scipy
+pysoundfile
+cffi
