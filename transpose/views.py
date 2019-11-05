@@ -233,7 +233,10 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
 def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
-    subprocess.call(["rubberband", "-p", pitch, wav_in, wav_out])
+    try:
+        subprocess.call(["rubberband", "-p", pitch, wav_in, wav_out])
+    except Exception as e:
+        print('\n\n', e)
     try:
         os.remove(wav_in)
     except:
