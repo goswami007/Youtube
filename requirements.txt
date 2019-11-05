@@ -8,3 +8,4 @@ pyrubberband
 scipy
 pysoundfile
 cffi
+soundfile
