@@ -113,6 +113,7 @@ def processing(request):
                                                               audio_path, 
                                                               shifted_audio_path)
         except Exception as e:
+            print('\n\n', e)
             return render(request, 'transpose/index.html', {
                 'error_message': "There was some problem getting the video. " + str(e),
                 'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
