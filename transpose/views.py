@@ -242,7 +242,7 @@ def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
         os.replace(wav_out, wav_in)
     except:
         print("Could not delete original wave file")
-    wav_to_mp3(wav_out)
+    wav_to_mp3(wav_in)
 
 
 """
