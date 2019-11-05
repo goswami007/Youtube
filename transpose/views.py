@@ -11,7 +11,6 @@ import subprocess
 import youtube_dl
 from .models import Youtube
 from scipy.io import wavfile
-from pyrubberband.pyrb import pitch_shift
 
 import re
 import urllib.request
