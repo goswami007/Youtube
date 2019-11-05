@@ -3,16 +3,14 @@ from django.http import HttpResponse, HttpResponseRedirect, FileResponse
 from django.urls import reverse
 from django.conf import settings
 
-import re
-import urllib.request
-from bs4 import BeautifulSoup
 import os
 import sox
 import ffmpeg
 import pathlib
 import youtube_dl
 from .models import Youtube
-
+from scipy.io import wavfile
+from pyrubberband.pyrb import pitch_shift
 
 import re
 import urllib.request
@@ -87,7 +85,7 @@ def index(request):
 def processing(request):
     youtube_link = request.POST.get('youtube_link')
     audio_pitch = float(request.POST.get('pitch'))
-    print(os.listdir())
+    print('\n\n', os.listdir(), '\n\n')
     try:
         print(os.listdir('../'))
     except:
@@ -128,13 +126,13 @@ def processing(request):
     print('\n\n before wav')
     create_wav(audio_path + file_name)
     print('\n\n after wav')
-    pitch_shift(file_name, audio_pitch, audio_path, shifted_audio_path)
+    pitch_shift_file(file_name, audio_pitch, audio_path, shifted_audio_path)
     print('\n\n after pitch shift')
     obj.transposed_file = shifted_audio_path + file_name
     obj.save()
     print('\n\n after saving')
     return render(request, 'transpose/index.html', context={
-        'file': obj.original_file.url,
+        'file': obj.transposed_file.url,
         'neg_range': [-8, -7, -6, -5, -4, -3, -2, -1],
         'pos_range': [1, 2, 3, 4, 5, 6, 7, 8]
         })
@@ -210,7 +208,7 @@ def wav_to_mp3(file):
         os.replace(file, out_file)
     except Exception as e:
         print("Could not delete pitch shifted wave file:", e)
-
+'''
 def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     t = sox.Transformer()
     t.pitch(pitch)
@@ -230,19 +228,29 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
     except:
         print("Could not delete original wave file")
     wav_to_mp3(wav_out)
+'''
 
-"""def pitch_shift(file, pitch, audio_path, shifted_audio_path):
+def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = shifted_audio_path + file[:-4] + '.wav'
-    # load the audio
-    print("\n\nLoading audio")
-    y, sr = librosa.load(wav_in, mono=True, sr=None)
-    print("\n\nshifting pitch of audio")
-    y_shifted = librosa.effects.pitch_shift(y, sr, n_steps=pitch)
-    print("\n\nwriting audio")
-    librosa.output.write_wav(wav_out, y_shifted, sr)
+    y, sr = wavfile.read(wav_in)
+    y_shifted = pitch_shift(y, sr, n_steps=pitch)
+    wavfile.write(filename=wav_out ,rate=sr, data=y_shifted)
     try:
         os.remove(wav_in)
     except:
         print("Could not delete original wave file")
-    wav_to_mp3(wav_out)"""
+    wav_to_mp3(wav_out)
+
+
+"""
+wav_in = audio_path + file[:-4] + '.wav'
+wav_out = shifted_audio_path + file[:-4] + '.wav'
+# load the audio
+print("\n\nLoading audio")
+y, sr = librosa.load(wav_in, mono=True, sr=None)
+print("\n\nshifting pitch of audio")
+y_shifted = librosa.effects.pitch_shift(y, sr, n_steps=pitch)
+print("\n\nwriting audio")
+librosa.output.write_wav(wav_out, y_shifted, sr)
+"""
