@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.conf import settings
 
 import os
-#import sox
+import sox
 import ffmpeg
 import pathlib
 import subprocess
@@ -232,12 +232,19 @@ def pitch_shift(file, pitch, audio_path, shifted_audio_path):
 '''
 
 def pitch_shift_file(file, pitch, audio_path, shifted_audio_path):
+    t = sox.Transformer()
+    t.pitch(pitch)
     wav_in = audio_path + file[:-4] + '.wav'
     wav_out = audio_path + file[:-4] + '_s' + '.wav'
+    print("\n\n", wav_in)
+    print("\n\n", wav_out)
+    print("\n\n Before build in pitch shift")
     try:
-        subprocess.call(["rubberband", "-p", str(pitch), wav_in, wav_out])
+        t.build(wav_in, wav_out)
+        #subprocess.call(["rubberband", "-p", str(pitch), wav_in, wav_out])
     except Exception as e:
-        print('\n\n', e)
+        print('\n\n', e, '\n\n')
+    print("\n\n after build in pitch_shift")
     try:
         os.replace(wav_out, wav_in)
     except:
