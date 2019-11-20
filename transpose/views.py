@@ -150,9 +150,14 @@ def genuine(link):
         return False
     return True
 
+def get_p():
+    page = urllib.request.urlopen('https://proxy.rudnkh.me/txt')
+    return page.read().decode().strip('\n')
+
 def download_audio(link, audio_path, shifted_audio_path):
-    p = Proxy('http://www.gatherproxy.com/sockslist')
-    yt_proxy = p.get_proxy()
+    #p = Proxy('http://www.gatherproxy.com/sockslist')
+    #yt_proxy = p.get_proxy()
+    yt_proxy = get_p()
     while yt_proxy != None:
         ydl_opts = {
             'format': 'worstaudio/worst',
@@ -171,10 +176,11 @@ def download_audio(link, audio_path, shifted_audio_path):
                 create_mp3(audio_path + name)
         except Exception:
             print(yt_proxy, "is not working")
-            p.delete_proxy()
-            yt_proxy = p.get_proxy()
+            #p.delete_proxy()
+            #yt_proxy = p.get_proxy()
         else:
             break
+        yt_proxy = None
     print("Out of yt_download")
     return name, video_id, title
 
