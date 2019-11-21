@@ -161,7 +161,7 @@ def download_audio(link, audio_path, shifted_audio_path):
     #p = get_p()
     #l = len(p)
     #k = 0
-    while k < l:#yt_proxy != None:
+    while yt_proxy != None:
         #yt_proxy = p[k]
         print("proxy:", yt_proxy)
         ydl_opts = {
