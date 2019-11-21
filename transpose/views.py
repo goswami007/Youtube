@@ -156,13 +156,13 @@ def get_p():
     return a.splitlines()
 
 def download_audio(link, audio_path, shifted_audio_path):
-    #p = Proxy('http://www.gatherproxy.com/sockslist')
-    #yt_proxy = p.get_proxy()
-    p = get_p()
-    l = len(p)
-    k = 0
+    p = Proxy('http://www.gatherproxy.com/sockslist')
+    yt_proxy = p.get_proxy()
+    #p = get_p()
+    #l = len(p)
+    #k = 0
     while k < l:#yt_proxy != None:
-        yt_proxy = p[k]
+        #yt_proxy = p[k]
         print("proxy:", yt_proxy)
         ydl_opts = {
             'format': 'worstaudio/worst',
@@ -181,11 +181,11 @@ def download_audio(link, audio_path, shifted_audio_path):
                 create_mp3(audio_path + name)
         except Exception:
             print(yt_proxy, "is not working")
-            #p.delete_proxy()
-            #yt_proxy = p.get_proxy()
+            p.delete_proxy()
+            yt_proxy = p.get_proxy()
         else:
             break
-        k += 1
+        #k += 1
         #yt_proxy = None
     print("Out of yt_download")
     return name, video_id, title
